@@ -2,6 +2,7 @@ import {
   ConsoleLogger,
   Injectable,
   LoggerService,
+  LogLevel,
 } from '@nestjs/common';
 
 @Injectable()
