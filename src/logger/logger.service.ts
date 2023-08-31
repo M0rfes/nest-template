@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 
 @Injectable()
-export class Logger extends ConsoleLogger implements LoggerService { }
+export class Logger extends ConsoleLogger implements LoggerService {}
 
 // @Injectable()
 // export class ExampleLogger implements LoggerService {
