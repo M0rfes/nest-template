@@ -30,6 +30,7 @@
     "@nestjs/swagger": "^7.1.8",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
+    "eslint-plugin-check-file": "^2.6.2",
     "nestjs-i18n": "^10.3.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1"
