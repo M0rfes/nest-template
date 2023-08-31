@@ -3,13 +3,15 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Logger } from './logger/logger.service';
 import { ConfigModule } from '@nestjs/config';
-import { I18nModule } from 'nestjs-i18n';
+import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import * as path from 'path';
+import { validateENV } from './config/env.validation';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      validate: validateENV,
     }),
     I18nModule.forRoot({
       fallbackLanguage: 'en',
@@ -17,6 +19,10 @@ import * as path from 'path';
         path: path.join(__dirname, '/i18n/'),
         watch: true,
       },
+      resolvers: [
+        { use: QueryResolver, options: ['lang'] },
+        AcceptLanguageResolver,
+      ],
     }),
   ],
   controllers: [AppController],
