@@ -1,12 +1,12 @@
 import { plainToClass } from 'class-transformer';
 import { IsEnum, IsNumber, validateSync } from 'class-validator';
 
-enum EnvironmentType {
+export enum EnvironmentType {
   Dev = 'dev',
   Prod = 'prod',
 }
 
-class EnvironmentVariables {
+export class EnvironmentVariables {
   @IsEnum(EnvironmentType)
   NODE_ENV: EnvironmentType;
 
