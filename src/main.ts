@@ -11,7 +11,7 @@ async function bootstrap() {
   app.enableVersioning({
     type: VersioningType.URI,
   });
-  app.use(new ValidationPipe({ transform: true, whitelist: true }));
+  app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
 
   const config = app.get(AppConfigService);
   if (config.get('NODE_ENV') === 'dev') {
