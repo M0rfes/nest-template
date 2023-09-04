@@ -21,6 +21,7 @@
     "prepare": "husky install",
     "pre-commit": "lint-staged",
     "sonar": "sonar-scanner",
+    "fix": "npm run lint && npm run format",
     "gen-doc": "npx @compodoc/compodoc -p tsconfig.json -s"
   },
   "dependencies": {
@@ -82,7 +83,7 @@
     "testEnvironment": "node"
   },
   "lint-staged": {
-    "*.{js,ts}": "npm run lint && npm run format",
+    "*.{js,ts}": "npm run fix",
     "*.{ts,js,json,md}": "prettier --write"
   }
 }

@@ -3,8 +3,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { Logger } from './logger/logger.service';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { EnvironmentVariables } from 'src/config/env.validation';
+import { AppConfigService } from './config/app-config/app-config.service';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: new Logger(),
@@ -14,7 +13,7 @@ async function bootstrap() {
   });
   app.use(new ValidationPipe({ transform: true, whitelist: true }));
 
-  const config = app.get(ConfigService<EnvironmentVariables, true>);
+  const config = app.get(AppConfigService);
   if (config.get('NODE_ENV') === 'dev') {
     const swagerConfig = new DocumentBuilder()
       .setTitle('nestjs template example')

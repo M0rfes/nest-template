@@ -21,31 +21,34 @@ module.exports = {
       'error',
       {
         '**/*.model.ts': '*.models.ts',
-        '**/*.util.ts': '*.utils.ts'
-      }
+        '**/*.util.ts': '*.utils.ts',
+      },
     ],
     'check-file/folder-match-with-fex': [
       'error',
       {
         '*.test.{js,ts}': '**/__tests__/',
-      }
+      },
     ],
     'check-file/folder-naming-convention': [
       'error',
       {
-        'src/**/': 'CAMEL_CASE',
-        'mocks/*/': 'KEBAB_CASE'
-      }
+        'src/**/': 'KEBAB_CASE',
+        'mocks/*/': 'KEBAB_CASE',
+      },
     ],
-    '@typescript-eslint/naming-convention': ['error', { selector: 'variableLike', format: ['camelCase', 'UPPER_CASE'] }],
+    '@typescript-eslint/naming-convention': [
+      'error',
+      { selector: 'variableLike', format: ['camelCase', 'UPPER_CASE'] },
+    ],
     '@typescript-eslint/naming-convention': [
       'error',
       {
         selector: 'variable',
         types: ['boolean'],
         format: ['PascalCase'],
-        prefix: ['is', 'should', 'has', 'can', 'did', 'will']
-      }
-    ]
+        prefix: ['is', 'should', 'has', 'can', 'did', 'will'],
+      },
+    ],
   },
 };

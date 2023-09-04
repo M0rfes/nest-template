@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import * as path from 'path';
 import { validateENV } from './config/env.validation';
+import { AppConfigService } from './config/app-config/app-config.service';
 
 @Module({
   imports: [
@@ -26,6 +27,6 @@ import { validateENV } from './config/env.validation';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService, Logger],
+  providers: [AppService, Logger, AppConfigService],
 })
 export class AppModule {}
