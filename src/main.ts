@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { Logger } from './logger/logger.service';
-import { VersioningType } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EnvironmentVariables } from 'src/config/env.validation';
 async function bootstrap() {
@@ -12,8 +12,9 @@ async function bootstrap() {
   app.enableVersioning({
     type: VersioningType.URI,
   });
-  const config = app.get(ConfigService<EnvironmentVariables>);
+  app.use(new ValidationPipe({ transform: true, whitelist: true }));
 
+  const config = app.get(ConfigService<EnvironmentVariables, true>);
   if (config.get('NODE_ENV') === 'dev') {
     const swagerConfig = new DocumentBuilder()
       .setTitle('nestjs template example')
