@@ -8,6 +8,14 @@
       {
         "include": "i18n/**/*",
         "watchAssets": true
+      },
+      {
+        "include": "templates",
+        "outDir": "dist"
+      },
+      {
+        "include": "Procfile",
+        "outDir": "dist"
       }
     ]
   }
