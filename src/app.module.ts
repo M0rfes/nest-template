@@ -12,6 +12,7 @@ import { RolesGuard } from './core/guards';
 import { ResponseInterceptor, HttpExceptionFilter } from './core/interceptors';
 import { JwtStrategy } from './core/stratiges';
 import { JwtModule } from '@nestjs/jwt';
+import { BasicCommand } from './app.command';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { JwtModule } from '@nestjs/jwt';
   controllers: [AppController],
   providers: [
     AppService,
+    BasicCommand,
     Logger,
     AppConfigService,
     JwtAuthGuard,

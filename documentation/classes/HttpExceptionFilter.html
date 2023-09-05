@@ -28,16 +28,23 @@
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
-               <div class="content controller">
+               <div class="content class">
                    <div class="content-data">
 
 
 
 
 
+
+
+
+
+
+
+
 <ol class="breadcrumb">
-  <li class="breadcrumb-item">Controllers</li>
-  <li class="breadcrumb-item" >AppController</li>
+  <li class="breadcrumb-item">Classes</li>
+  <li class="breadcrumb-item" >HttpExceptionFilter</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -61,13 +68,18 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/app.controller.ts</code>
+            <code>src/core/interceptors/exception.interceptor.ts</code>
         </p>
 
 
 
 
-
+            <p class="comment">
+                <h3>Implements</h3>
+            </p>
+            <p class="comment">
+                        <code>ExceptionFilter</code>
+            </p>
 
 
             <section data-compodoc="block-index">
@@ -84,9 +96,8 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                <a href="#getHello" >getHello</a>
+                                    <span class="modifier">Async</span>
+                                <a href="#catch" >catch</a>
                             </li>
                         </ul>
                     </td>
@@ -100,6 +111,8 @@
     </table>
 </section>
 
+
+
             <section data-compodoc="block-methods">
     
     <h3 id="methods">
@@ -109,80 +122,130 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="getHello"></a>
+                    <a name="catch"></a>
                     <span class="name">
-                        <span class="modifier"></span>
-                        <span class="modifier"></span>
-                        <span ><b>getHello</b></span>
-                        <a href="#getHello"><span class="icon ion-ios-link"></span></a>
+                        <span class="modifier">Async</span>
+                        <span ><b>catch</b></span>
+                        <a href="#catch"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>getHello()</code>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Decorators : </b>
-                    <br />
-                    <code>@Get()<br />@Version(&#x27;1&#x27;)<br /></code>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="12"
-                            class="link-to-prism">src/app.controller.ts:12</a></div>
+                    <code>catch(exception: HttpException, host: ArgumentsHost)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-description"><p>This is a hello handeler</p>
-</div>
+                    <div class="io-line">Defined in <a href="" data-line="13"
+                            class="link-to-prism">src/core/interceptors/exception.interceptor.ts:13</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
 
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>exception</td>
+                                    <td>
+                                            <code>HttpException</code>
+                                    </td>
 
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>host</td>
+                                    <td>
+                                            <code>ArgumentsHost</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
                     </div>
                 </td>
             </tr>
         </tbody>
     </table>
-</section>    </div>
+</section>
+
+
+
+
+
+    </div>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Controller, Get, Version } from &#x27;@nestjs/common&#x27;;
-import { AppService } from &#x27;./app.service&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  ExceptionFilter,
+  Catch,
+  ArgumentsHost,
+  HttpException,
+  HttpStatus,
+} from &#x27;@nestjs/common&#x27;;
+import { Response } from &#x27;express&#x27;;
+import { I18nContext } from &#x27;nestjs-i18n&#x27;;
 
-@Controller()
-export class AppController {
-  constructor(private readonly appService: AppService) {}
-  /**
-   * This is a hello handeler
-   */
-  @Get()
-  @Version(&#x27;1&#x27;)
-  getHello(): string {
-    return this.appService.getHello();
+@Catch(HttpException)
+export class HttpExceptionFilter implements ExceptionFilter {
+  async catch(exception: HttpException, host: ArgumentsHost) {
+    const context &#x3D; host.switchToHttp();
+    const response &#x3D; context.getResponse&lt;Response&gt;();
+    const i18n &#x3D; I18nContext.current(host);
+    if (exception.getStatus() &#x3D;&#x3D;&#x3D; 400) response.send(exception.getResponse());
+    const statusCode &#x3D;
+      exception instanceof HttpException
+        ? exception.getStatus()
+        : HttpStatus.INTERNAL_SERVER_ERROR;
+    const message &#x3D; exception?.message
+      ? i18n.translate(&#x60;translation.${exception.message}&#x60;, {
+          lang: i18n.lang,
+        })
+      : &#x27;Internal server error&#x27;;
+    response.status(statusCode).json({
+      statusCode,
+      message,
+    });
   }
 }
 </code></pre>
     </div>
 </div>
-
-
-
-
-
-
-
 
 
 
@@ -217,8 +280,8 @@ export class AppController {
 
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
-            var COMPODOC_CURRENT_PAGE_CONTEXT = 'controller';
-            var COMPODOC_CURRENT_PAGE_URL = 'AppController.html';
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
+            var COMPODOC_CURRENT_PAGE_URL = 'HttpExceptionFilter.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 
