@@ -15,3 +15,35 @@ To check database integration checkout the [recipes](https://docs.nestjs.com/rec
 [versioning](https://docs.nestjs.com/techniques/versioning) we are using path versioning you can use `@Version` decorator to tage you controller methods
 
 To checkout some Typeorm and nestjs specific recipes checput typeorm+prostgress branch
+
+Commands related to migrations
+
+To generate a new empty migration run
+
+```bash
+npm run migration:create --name=<name_of_the_migration>
+```
+
+To generate a migration from entity file change
+
+```bash
+npm run migration:generate --name=<name_of_the_migration>
+```
+
+To apply the migration
+
+```bash
+npm run migration:run
+```
+
+To revert the migration
+
+```bash
+npm run migration:revert
+```
+
+To drop the Schema
+
+```bash
+npm run schema:drop
+```
