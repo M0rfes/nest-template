@@ -26,10 +26,14 @@
     "sonar": "sonar-scanner",
     "fix": "npm run lint && npm run format",
     "gen-doc": "npx @compodoc/compodoc -p tsconfig.json -s",
-    "migration:generate": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/database/typeorm.ts migration:generate ./src/database/public/migrations/$npm_config_name",
-    "migration:create": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:create ./src/database/public/migrations/$npm_config_name",
-    "migration:run": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/database/typeorm.ts migration:run",
-    "migration:revert": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/database/typeorm.ts migration:revert",
+    "public-migration:generate": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/database/typeorm.ts migration:generate ./src/database/public/migrations/$npm_config_name",
+    "public-migration:create": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:create ./src/database/public/migrations/$npm_config_name",
+    "public-migration:run": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/database/typeorm.ts migration:run",
+    "public-migration:revert": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/database/typeorm.ts migration:revert",
+    "tenancy-migration:generate": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/database/tenans.ts migration:generate ./src/database/tenancy/migrations/$npm_config_name",
+    "tenancy-migration:create": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:create ./src/database/tenancy/migrations/$npm_config_name",
+    "tenancy-migration:run": "ts-node-dev -r tsconfig-paths/register  src/database/tenancy/migrate-up.ts",
+    "tenancy-migration:revert": "ts-node-dev -r tsconfig-paths/register  src/database/tenancy/migrate-down.ts",
     "schema:drop": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/database/typeorm.ts schema:drop"
   },
   "dependencies": {

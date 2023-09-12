@@ -14,6 +14,7 @@ import { JwtStrategy } from './core/stratiges';
 import { JwtModule } from '@nestjs/jwt';
 import { BasicCommand } from './app.command';
 import { DatabaseModule } from './database/database.module';
+import { TenantModule } from './modules/tenant/tenant.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { DatabaseModule } from './database/database.module';
       }),
       inject: [ConfigService],
     }),
+    TenantModule,
   ],
   controllers: [AppController],
   providers: [
