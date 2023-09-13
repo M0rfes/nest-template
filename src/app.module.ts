@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Logger } from './logger/logger.service';
@@ -15,7 +15,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { BasicCommand } from './app.command';
 import { DatabaseModule } from './database/database.module';
 import { TenantModule } from './modules/tenant/tenant.module';
-import { TenantIdMiddelware } from './tenant-id/tenant-id.middelware';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -45,6 +45,7 @@ import { TenantIdMiddelware } from './tenant-id/tenant-id.middelware';
       inject: [ConfigService],
     }),
     TenantModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [
@@ -59,8 +60,4 @@ import { TenantIdMiddelware } from './tenant-id/tenant-id.middelware';
     JwtStrategy,
   ],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(TenantIdMiddelware);
-  }
-}
+export class AppModule {}

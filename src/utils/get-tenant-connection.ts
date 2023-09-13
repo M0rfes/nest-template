@@ -1,8 +1,8 @@
 import tenantConfig from 'src/database/tenans';
 import { getConnectionManager, DataSource } from 'typeorm';
 
-export async function getTenantConnection(tentId: string) {
-  const connectionName = `tenant_${tentId}`;
+export async function getTenantConnection(tenantId: string) {
+  const connectionName = `tenant_${tenantId}`;
   const connectionmanager = getConnectionManager();
   if (connectionmanager.has(connectionName)) {
     const connection = connectionmanager.get(connectionName);

@@ -13,12 +13,14 @@ import {
 import { AppConfigService } from './config/app-config/app-config.service';
 import { JwtAuthGuard, RolesGuard } from './core/guards';
 import { ResponseInterceptor, HttpExceptionFilter } from './core/interceptors';
+import { tenantMiddelware } from './tenant.middelware';
 
 async function bootstrap() {
   const baseUrl = '/api';
   const app = await NestFactory.create(AppModule, {
     logger: new Logger(),
   });
+  app.use(tenantMiddelware);
   app.enableVersioning({
     type: VersioningType.URI,
   });
