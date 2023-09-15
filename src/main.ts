@@ -14,8 +14,7 @@ import { AppConfigService } from './config/app-config/app-config.service';
 import { JwtAuthGuard, RolesGuard } from './core/guards';
 import { ResponseInterceptor, HttpExceptionFilter } from './core/interceptors';
 
-import { NextFunction } from 'express';
-import { asyncLocalStorage } from './logger';
+import { asyncStorageMiddleware } from './middlwares/async-storage.middleware';
 
 async function bootstrap() {
   const baseUrl = '/api';
@@ -64,18 +63,24 @@ async function bootstrap() {
     SwaggerModule.setup('doc', app, document);
   }
 
+  if (config.get('SET_REQID_IN_LOG')) {
+    app.use(asyncStorageMiddleware);
+  }
+
   await app.listen(config.get('PORT'));
-
-  app.use(async (req: Request, res: Response, next: NextFunction) => {
-    const reqFromHeader = req.headers['x-request-id'];
-    const requestId: string = reqFromHeader || Math.random();
-    console.log('requestId', requestId);
-    await asyncLocalStorage.run({ requestId }, async () => {
-      return next();
-    });
-
-    next();
-  });
 }
+
+// const asyncStorageMiddleware = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction,
+// ) => {
+//   // use x-request-id or fallback to a nanoid
+//   const requestId: string = req.headers['x-request-id'] || Math.random();
+//   // every other Koa middleware will run within the AsyncLocalStorage context
+//   await asyncLocalStorage.run({ requestId }, async () => {
+//     return next();
+//   });
+// };
 
 bootstrap();

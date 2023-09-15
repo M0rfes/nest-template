@@ -14,8 +14,6 @@ import { JwtStrategy } from './core/stratiges';
 import { JwtModule } from '@nestjs/jwt';
 import { BasicCommand } from './app.command';
 import { CustomLoggerService } from './logger/winston-logger.service';
-import { MiddlewareConsumer, NestModule } from '@nestjs/common/interfaces';
-import { AsyncLocalStorageMiddleware } from './middlwares/async-storage.middleware';
 
 @Module({
   imports: [
@@ -59,8 +57,4 @@ import { AsyncLocalStorageMiddleware } from './middlwares/async-storage.middlewa
   ],
   exports: [CustomLoggerService],
 })
-export class AppModule {
-  // configure(consumer: MiddlewareConsumer) {
-  //   consumer.apply(AsyncLocalStorageMiddleware).forRoutes('*');
-  // }
-}
+export class AppModule {}

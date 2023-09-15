@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable, Logger as NestLogger } from '@nestjs/common';
 import * as winston from 'winston';
 
 import { AppConfigService } from 'src/config/app-config/app-config.service';
-import { AsyncLocalStorage } from 'async_hooks';
+import { AsyncLocalStorage } from 'node:async_hooks';
 export const asyncLocalStorage = new AsyncLocalStorage<{ requestId: string }>();
 
 @Injectable()
@@ -23,13 +24,14 @@ export class CustomLoggerService extends NestLogger {
             const resetColor = '\x1b[0m'; // Reset color
 
             let logMessage = `${colorizeTimestamp}[${timestamp}]${resetColor} [${level}]`;
-            if (context) {
-              logMessage += ` [${context}]`;
-            }
+
             if (requestId) {
               logMessage += ` ${colorizeRequestId}[ReqID: ${requestId}]${resetColor}`;
             }
 
+            if (context) {
+              logMessage += ` [${context}]`;
+            }
             logMessage += ` - ${message}`;
 
             if (Object.keys(metadata).length > 0) {

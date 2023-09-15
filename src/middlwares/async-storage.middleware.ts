@@ -1,24 +1,16 @@
 import { NextFunction } from 'express';
-
-import { AppConfigService } from 'src/config/app-config/app-config.service';
-import { Injectable, NestMiddleware } from '@nestjs/common';
-import { randomUUID } from 'node:crypto';
 import { asyncLocalStorage } from 'src/logger';
+import { randomUUID } from 'node:crypto';
 
-@Injectable()
-export class AsyncLocalStorageMiddleware implements NestMiddleware {
-  constructor(private readonly appConfigService: AppConfigService) {}
-
-  async use(req: Request, res: Response, next: NextFunction) {
-    const setREQId = this.appConfigService.get('SET_REQID_IN_LOG');
-    if (setREQId) {
-      const reqFromHeader = req.headers['x-request-id'];
-      const requestId: string = reqFromHeader || Math.random();
-      console.log('requestId', requestId);
-      await asyncLocalStorage.run({ requestId }, async () => {
-        return next();
-      });
-    }
-    next();
-  }
-}
+export const asyncStorageMiddleware = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  // use x-request-id or fallback to a nanoid
+  const requestId: string = req.headers['x-request-id'] || randomUUID();
+  // every other Koa middleware will run within the AsyncLocalStorage context
+  await asyncLocalStorage.run({ requestId }, async () => {
+    return next();
+  });
+};
