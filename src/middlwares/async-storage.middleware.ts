@@ -1,7 +1,8 @@
 import { NextFunction } from 'express';
-import { asyncLocalStorage } from 'src/logger';
-import { randomUUID } from 'node:crypto';
 
+import { randomUUID } from 'node:crypto';
+import { AsyncLocalStorage } from 'node:async_hooks';
+export const asyncLocalStorage = new AsyncLocalStorage<{ requestId: string }>();
 export const asyncStorageMiddleware = async (
   req: Request,
   res: Response,

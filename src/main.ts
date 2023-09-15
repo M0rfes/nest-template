@@ -15,12 +15,13 @@ import { JwtAuthGuard, RolesGuard } from './core/guards';
 import { ResponseInterceptor, HttpExceptionFilter } from './core/interceptors';
 
 import { asyncStorageMiddleware } from './middlwares/async-storage.middleware';
+import { CustomLoggerService } from './logger';
 
 async function bootstrap() {
   const baseUrl = '/api';
-  const app = await NestFactory.create(AppModule, {
-    // logger: LoggerService,
-  });
+  const app = await NestFactory.create(AppModule);
+  // use this if default nest logs to use your custom logger
+  app.useLogger(app.get(CustomLoggerService));
 
   app.enableVersioning({
     type: VersioningType.URI,
