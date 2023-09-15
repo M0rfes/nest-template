@@ -13,17 +13,15 @@ import {
 import { AppConfigService } from './config/app-config/app-config.service';
 import { JwtAuthGuard, RolesGuard } from './core/guards';
 import { ResponseInterceptor, HttpExceptionFilter } from './core/interceptors';
-import { LOGGER_KEY } from './logger/logger.module';
+
 import { NextFunction } from 'express';
-import { asyncLocalStorage } from './logger/tslog-logger.service';
+import { asyncLocalStorage } from './logger';
 
 async function bootstrap() {
   const baseUrl = '/api';
   const app = await NestFactory.create(AppModule, {
-    // logger: new Logger(),
+    // logger: LoggerService,
   });
-
-  app.useLogger(app.get(LOGGER_KEY));
 
   app.enableVersioning({
     type: VersioningType.URI,
@@ -53,7 +51,7 @@ async function bootstrap() {
   app.use(morgan('combined'));
   app.use(helmet());
 
-  app.use(asyncStorageMiddleware);
+  // app.use(AsyncLocalStorageMiddleware);
 
   const config = app.get(AppConfigService);
   if (config.get('NODE_ENV') === 'dev') {
@@ -67,19 +65,17 @@ async function bootstrap() {
   }
 
   await app.listen(config.get('PORT'));
-}
 
-const asyncStorageMiddleware = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  // use x-request-id or fallback to a nanoid
-  const requestId: string = req.headers['x-request-id'] || Nanoid.nanoid(6);
-  // every other Koa middleware will run within the AsyncLocalStorage context
-  await asyncLocalStorage.run({ requestId }, async () => {
-    return next();
+  app.use(async (req: Request, res: Response, next: NextFunction) => {
+    const reqFromHeader = req.headers['x-request-id'];
+    const requestId: string = reqFromHeader || Math.random();
+    console.log('requestId', requestId);
+    await asyncLocalStorage.run({ requestId }, async () => {
+      return next();
+    });
+
+    next();
   });
-};
+}
 
 bootstrap();

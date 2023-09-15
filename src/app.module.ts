@@ -13,7 +13,9 @@ import { ResponseInterceptor, HttpExceptionFilter } from './core/interceptors';
 import { JwtStrategy } from './core/stratiges';
 import { JwtModule } from '@nestjs/jwt';
 import { BasicCommand } from './app.command';
-import { LoggerModule } from './logger/logger.module';
+import { CustomLoggerService } from './logger/winston-logger.service';
+import { MiddlewareConsumer, NestModule } from '@nestjs/common/interfaces';
+import { AsyncLocalStorageMiddleware } from './middlwares/async-storage.middleware';
 
 @Module({
   imports: [
@@ -41,7 +43,6 @@ import { LoggerModule } from './logger/logger.module';
       }),
       inject: [ConfigService],
     }),
-    LoggerModule,
   ],
   controllers: [AppController],
   providers: [
@@ -54,7 +55,12 @@ import { LoggerModule } from './logger/logger.module';
     ResponseInterceptor,
     HttpExceptionFilter,
     JwtStrategy,
+    CustomLoggerService,
   ],
-  exports: [LoggerModule],
+  exports: [CustomLoggerService],
 })
-export class AppModule {}
+export class AppModule {
+  // configure(consumer: MiddlewareConsumer) {
+  //   consumer.apply(AsyncLocalStorageMiddleware).forRoutes('*');
+  // }
+}

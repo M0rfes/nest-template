@@ -1,19 +1,13 @@
-import {
-  Controller,
-  Get,
-  Version,
-  LoggerService,
-  Inject,
-} from '@nestjs/common';
+import { Controller, Get, Version } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Public } from './core/decorators';
-import { LOGGER_KEY } from './logger';
+import { CustomLoggerService } from './logger/winston-logger.service';
 
 @Controller()
 export class AppController {
   constructor(
     private readonly appService: AppService,
-    @Inject(LOGGER_KEY) private readonly logger: LoggerService,
+    private readonly logger: CustomLoggerService,
   ) {}
   /**
    * This is a hello handeler

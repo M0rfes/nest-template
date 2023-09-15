@@ -1,5 +1,12 @@
 import { plainToClass } from 'class-transformer';
-import { IsEnum, IsNumber, IsString, validateSync } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+  validateSync,
+} from 'class-validator';
 
 export enum EnvironmentType {
   Dev = 'dev',
@@ -15,6 +22,10 @@ export class EnvironmentVariables {
 
   @IsString()
   JWT_SECRET: string;
+
+  @IsOptional()
+  @IsBoolean()
+  SET_REQID_IN_LOG: boolean;
 }
 
 export function validateENV(configuration: Record<string, unknown>) {
