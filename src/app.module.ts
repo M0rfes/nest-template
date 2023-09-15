@@ -13,6 +13,7 @@ import { ResponseInterceptor, HttpExceptionFilter } from './core/interceptors';
 import { JwtStrategy } from './core/stratiges';
 import { JwtModule } from '@nestjs/jwt';
 import { BasicCommand } from './app.command';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { BasicCommand } from './app.command';
       }),
       inject: [ConfigService],
     }),
+    LoggerModule,
   ],
   controllers: [AppController],
   providers: [
@@ -53,5 +55,6 @@ import { BasicCommand } from './app.command';
     HttpExceptionFilter,
     JwtStrategy,
   ],
+  exports: [LoggerModule],
 })
 export class AppModule {}
