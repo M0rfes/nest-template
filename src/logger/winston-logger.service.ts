@@ -1,47 +1,80 @@
-import { LoggerService } from '@nestjs/common';
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { LoggerService } from '@nestjs/common';
+
 import { Injectable } from '@nestjs/common';
 import * as winston from 'winston';
-
 import { AppConfigService } from 'src/config/app-config/app-config.service';
-import { asyncLocalStorage } from 'src/middlwares/async-storage.middleware';
+import { asyncLocalStorage } from 'src/middlewares/async-local-storage.middleware';
 
 @Injectable()
 export class CustomLoggerService implements LoggerService {
+  private DailyRotateFile = require('winston-daily-rotate-file');
   private logger: winston.Logger;
-
+  // TODO move this to config file
+  private enableDailyFileRotate = false;
   constructor(private readonly config: AppConfigService) {
     this.logger = winston.createLogger({
       level: 'info',
       format: winston.format.combine(
         winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
         winston.format.colorize({ all: true }),
-        winston.format.printf(
-          ({ timestamp, level, message, context, requestId, ...metadata }) => {
-            const colorizeRequestId = '\x1b[36m'; // Cyan
-            const colorizeTimestamp = '\x1b[35m'; // Magenta
-            const resetColor = '\x1b[0m'; // Reset color
-
-            let logMessage = `${colorizeTimestamp}[${timestamp}]${resetColor} [${level}]`;
-            if (context) {
-              logMessage += ` [${context}]`;
-            }
-            if (requestId) {
-              logMessage += ` ${colorizeRequestId}[ReqID: ${requestId}]${resetColor}`;
-            }
-
-            logMessage += ` - ${message}`;
-
-            if (Object.keys(metadata).length > 0) {
-              logMessage += ` ${JSON.stringify(metadata, null, 2)}`;
-            }
-            return logMessage;
-          },
-        ),
+        winston.format.printf(this.winstonPrintf),
       ),
 
-      transports: [new winston.transports.Console()],
+      transports: this.getTransports(),
     });
+  }
+
+  private winstonPrintf = ({
+    timestamp,
+    level,
+    message,
+    context,
+    requestId,
+    ...metadata
+  }) => {
+    const colorizeRequestId = '\x1b[36m'; // Cyan
+    const colorizeTimestamp = '\x1b[35m'; // Magenta
+    const resetColor = '\x1b[0m'; // Reset color
+
+    let logMessage = `${colorizeTimestamp}[${timestamp}]${resetColor} [${level}]`;
+    if (context) {
+      logMessage += ` [${context}]`;
+    }
+    if (requestId) {
+      logMessage += ` ${colorizeRequestId}[ReqID: ${requestId}]${resetColor}`;
+    }
+
+    logMessage += ` - ${message}`;
+
+    if (Object.keys(metadata).length > 0) {
+      logMessage += ` ${JSON.stringify(metadata, null, 2)}`;
+    }
+    return logMessage;
+  };
+
+  private getTransports() {
+    const transports: winston.transport[] = [new winston.transports.Console()];
+    if (this.enableDailyFileRotate)
+      transports.push(this.dailyFileRotateTransport());
+    return transports;
+  }
+
+  private dailyFileRotateTransport() {
+    return new this.DailyRotateFile({
+      // TODO , move below to config file
+      filename: 'logs/application-%DATE%.log',
+      datePattern: 'YYYY-MM-DD',
+      zippedArchive: true,
+      maxSize: '20m',
+      maxFiles: '14d',
+    });
+  }
+
+  private getRequestId(): string | void {
+    if (this.config?.get('SET_REQID_IN_LOG'))
+      return asyncLocalStorage.getStore()?.requestId;
+    else return;
   }
 
   log(message: string, context?: string, ...metadata: any[]) {
@@ -63,11 +96,5 @@ export class CustomLoggerService implements LoggerService {
     // super.debug(message, context);
     const requestId = this.getRequestId();
     this.logger.debug(message, { context, requestId, ...metadata });
-  }
-
-  private getRequestId(): string | void {
-    if (this.config?.get('SET_REQID_IN_LOG'))
-      return asyncLocalStorage.getStore()?.requestId;
-    else return;
   }
 }

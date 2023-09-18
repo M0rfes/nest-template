@@ -14,7 +14,7 @@ import { AppConfigService } from './config/app-config/app-config.service';
 import { JwtAuthGuard, RolesGuard } from './core/guards';
 import { ResponseInterceptor, HttpExceptionFilter } from './core/interceptors';
 
-import { asyncStorageMiddleware } from './middlwares/async-storage.middleware';
+import { asyncLocalStorageMiddleware } from './middlewares/async-local-storage.middleware';
 import { CustomLoggerService } from './logger';
 
 async function bootstrap() {
@@ -65,13 +65,13 @@ async function bootstrap() {
   }
 
   if (config.get('SET_REQID_IN_LOG')) {
-    app.use(asyncStorageMiddleware);
+    app.use(asyncLocalStorageMiddleware);
   }
 
   await app.listen(config.get('PORT'));
 }
 
-// const asyncStorageMiddleware = async (
+// const asyncLocalStorageMiddleware = async (
 //   req: Request,
 //   res: Response,
 //   next: NextFunction,
