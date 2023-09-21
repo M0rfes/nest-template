@@ -13,9 +13,11 @@ import { ResponseInterceptor, HttpExceptionFilter } from './core/interceptors';
 import { JwtStrategy } from './core/stratiges';
 import { JwtModule } from '@nestjs/jwt';
 import { BasicCommand } from './app.command';
+import { LoggerModule } from 'nestjs-pino';
 
 @Module({
   imports: [
+    LoggerModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
       validate: validateENV,
@@ -35,7 +37,7 @@ import { BasicCommand } from './app.command';
       imports: [ConfigModule],
       useFactory: async (configService: AppConfigService) => ({
         secret: configService.get('JWT_SECRET'),
-        signOptions: { expiresIn: '60s' },
+        signOptions: { expiresIn: configService.get('JWT_EXP_IN') },
         global: true,
       }),
       inject: [ConfigService],

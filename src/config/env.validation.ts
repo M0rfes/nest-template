@@ -1,5 +1,12 @@
-import { plainToClass } from 'class-transformer';
-import { IsEnum, IsNumber, IsString, validateSync } from 'class-validator';
+import { Transform, Type, plainToClass } from 'class-transformer';
+import {
+  IsBoolean,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+  validateSync,
+} from 'class-validator';
 
 export enum EnvironmentType {
   Dev = 'dev',
@@ -11,10 +18,29 @@ export class EnvironmentVariables {
   NODE_ENV: EnvironmentType;
 
   @IsNumber()
+  @Type(() => Number)
   PORT: number;
 
   @IsString()
   JWT_SECRET: string;
+
+  @IsString()
+  JWT_EXP_IN: string;
+
+  @IsNumber()
+  @Type(() => Number)
+  @IsOptional()
+  RATE_LIMIT_MAX = 900000;
+
+  @IsNumber()
+  @Type(() => Number)
+  @IsOptional()
+  RATE_LIMIT_WINDOW_MS = 10;
+
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true')
+  @IsOptional()
+  RATE_LIMIT_ENABLED = true;
 }
 
 export function validateENV(configuration: Record<string, unknown>) {
