@@ -41,6 +41,26 @@ export class EnvironmentVariables {
   @Transform(({ value }) => value === 'true')
   @IsOptional()
   RATE_LIMIT_ENABLED = true;
+
+  @IsString()
+  @IsOptional()
+  SENTRY_DSN: string;
+
+  @IsString()
+  @IsOptional()
+  SENTRY_DEBUG: string;
+
+  @IsString()
+  @IsOptional()
+  SENTRY_ENV: string;
+
+  @IsString()
+  @IsOptional()
+  SENTRY_RELEASE: string;
+
+  @IsString({ each: true })
+  @IsOptional()
+  SENTRY_LOG_LEVELS: string[];
 }
 
 export function validateENV(configuration: Record<string, unknown>) {
